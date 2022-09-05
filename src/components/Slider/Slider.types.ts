@@ -1,6 +1,7 @@
 export interface Simple {
     min: number;
     max: number;
+    step?: number;
 }
 
 export interface Output {

@@ -4,11 +4,11 @@ import { SliderProps, Output } from "./Slider.types";
 import "./Slider.scss";
 
 const range = (start: number, end: number, step: number) => {
-    return Array.from(Array.from(Array(Math.ceil((end - start) / step)).keys()), (x) => start + x * step);
+    return Array.from(Array.from(Array(Math.ceil((end - start) / step - (step < 1 ? 1 : 0))).keys()), (x) => start + x * step);
 };
 
 const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPosition, value, onChange, start, formatter }) => {
-    const values = value instanceof Array ? value : Array.from(range(value.min, value.max + 1, 1));
+    const values = value instanceof Array ? value : Array.from(range(value.min, value.max + 1, value.step || 1));
     const startPoint = start ? (values.indexOf(start) === -1 ? 0 : values.indexOf(start)) : 0;
     const format = formatter ? formatter : (x: string | number) => `${x}`;
 

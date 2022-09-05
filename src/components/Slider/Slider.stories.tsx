@@ -114,6 +114,7 @@ for (let i = 0; i < 26; i++) {
 const someData = {
     min: 1,
     max: 10,
+    step: 0.5,
 };
 
 export const Primary = () => (
@@ -138,7 +139,7 @@ export const Primary = () => (
                 onChange={(x) => {
                     console.log("2: ", x);
                 }}
-                hasSteps
+                // hasSteps
                 // start={"03-21-2020"}
                 // formatter={(x: any) => `${x.substring(0, 5)}`}
             />
