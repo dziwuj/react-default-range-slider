@@ -1,2 +1,2 @@
 export * from "./components";
-import "./components/RangeSlider/RangeSlider.scss";
+import "./components/Slider/Slider.scss";

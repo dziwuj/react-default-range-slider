@@ -4,24 +4,16 @@ export interface Simple {
 }
 
 export interface Output {
-    min: string;
-    max: string;
-    minIndex: number;
-    maxIndex: number;
+    value: string;
+    valueIndex: number;
 }
 
-export interface RangeSliderProps {
+export interface SliderProps {
     hasSteps?: boolean;
     tooltipVisibility?: "always" | "hover" | "never";
     tooltipPosition?: "under" | "over";
     value: Simple | (number | string)[];
-    from?: number | string;
-    to?: number | string;
+    start?: number | string;
     formatter?: (value: number | string) => string;
     onChange: (value: Output) => void;
-}
-
-export interface Status {
-    value: string;
-    valueIndex: number;
 }
