@@ -114,7 +114,7 @@ for (let i = 0; i < 26; i++) {
 const someData = {
     min: 1,
     max: 10,
-    step: 0.5,
+    step: 1,
 };
 
 export const Primary = () => (
@@ -134,7 +134,7 @@ export const Primary = () => (
         <div style={{ width: "400px" }}>
             <Slider
                 value={someData}
-                tooltipVisibility="hover"
+                tooltipVisibility="always"
                 tooltipPosition="over"
                 onChange={(x) => {
                     console.log("2: ", x);

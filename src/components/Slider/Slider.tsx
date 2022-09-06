@@ -3,12 +3,55 @@ import { SliderProps, Output } from "./Slider.types";
 
 import "./Slider.scss";
 
-const range = (start: number, end: number, step: number) => {
-    return Array.from(Array.from(Array(Math.ceil((end - start) / step - (step < 1 ? 1 : 0))).keys()), (x) => start + x * step);
+// const range = (start: number, end: number, step: number) => {
+//     return Array.from(Array.from(Array(Math.ceil((end - start) / step)).keys()), (x) => start + x * step);
+// };
+
+const range = function (start: number | string, end: number | string, step: number) {
+    let range = [];
+
+    if (step === 0) {
+        throw TypeError("Step cannot be zero.");
+    }
+
+    if (typeof start == "undefined" || typeof end == "undefined") {
+        throw TypeError("Must pass start and end arguments.");
+    } else if (typeof start != typeof end) {
+        throw TypeError("Start and end arguments must be of same type.");
+    }
+
+    typeof step == "undefined" && (step = 1);
+
+    if (end < start) {
+        step = -step;
+    }
+
+    if (typeof start == "number") {
+        while (step > 0 ? end >= start : end <= start) {
+            range.push(start);
+            start += step;
+        }
+    } else if (typeof start == "string" && typeof end == "string") {
+        if (start.length != 1 || end.length != 1) {
+            throw TypeError("Only strings with one character are supported.");
+        }
+
+        start = start.charCodeAt(0);
+        end = end.charCodeAt(0);
+
+        while (step > 0 ? end >= start : end <= start) {
+            range.push(String.fromCharCode(start));
+            start += step;
+        }
+    } else {
+        throw TypeError("Only string and number types are supported");
+    }
+
+    return range;
 };
 
 const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPosition, value, onChange, start, formatter }) => {
-    const values = value instanceof Array ? value : Array.from(range(value.min, value.max + 1, value.step || 1));
+    const values = value instanceof Array ? value : range(value.min, value.max, value.step || 1);
     const startPoint = start ? (values.indexOf(start) === -1 ? 0 : values.indexOf(start)) : 0;
     const format = formatter ? formatter : (x: string | number) => `${x}`;
 
@@ -82,7 +125,6 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
 
     useEffect(() => {
         if (firstRender.current) return;
-        // console.log(left);
         if (track && tooltipRef.current && containerRef.current && ballSize && left) {
             if (
                 left - tooltipRef.current.clientWidth / 2 + ballSize / 2 <
@@ -93,7 +135,6 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
                 }px`;
                 tooltipRef.current.style.setProperty("--after-left", `0`);
                 tooltipRef.current.style.setProperty("--after-margin-left", `${Math.abs(left + tooltipRef.current.clientWidth / 2 - ballSize / 1.5)}px`);
-                console.log("lewo");
             } else if (
                 left + tooltipRef.current.clientWidth / 2 + ballSize / 2 >
                 Number(window.getComputedStyle(containerRef.current).marginRight.replace("px", "")) + containerRef.current.clientWidth
