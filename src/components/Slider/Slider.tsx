@@ -166,7 +166,10 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
             return;
         }
         outputRef.current = { value: min.value, valueIndex: min.valueIndex };
-        if (update === "jumpTo") onChange(outputRef.current);
+        if (update === "jumpTo") {
+            onChange(outputRef.current);
+            setUpdate(null);
+        }
     }, [min.value]);
 
     useEffect(() => {
@@ -218,7 +221,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
 
             setMin({ value: format(stringValue), valueIndex: index });
         }
-        setUpdate(null);
+        if (update !== "jumpTo") setUpdate(null);
     };
 
     return (
