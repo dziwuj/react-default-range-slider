@@ -63,7 +63,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
 
     if (!tooltipVisibility) tooltipVisibility = "always";
     const [left, setLeft] = useState<number | null>(null);
-    const [track, setTrack] = useState<{ width: number } | null>(null);
+    const [track, setTrack] = useState<number | null>(null);
     const [visibility, setVisibility] = useState<"visible" | "hidden">(tooltipVisibility === "always" ? "visible" : "hidden");
     const [currentMousePosition, setCurrentMousePosition] = useState<number>(0);
     const [moving, setMoving] = useState<boolean>(false);
@@ -95,10 +95,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
 
         const trackWidth = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * outputRef.current.valueIndex;
 
-        if (trackRef.current)
-            setTrack({
-                width: trackWidth,
-            });
+        if (trackRef.current) setTrack(trackWidth);
     }
 
     function cancel() {
@@ -127,6 +124,8 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
 
     useEffect(() => {
         if (firstRender.current) return;
+        if (left !== null && ballSize) setTrack(left + ballSize / 2);
+
         if (tooltipRef.current && containerRef.current && ballSize && left) {
             if (
                 left - tooltipRef.current.clientWidth - ballSize / 2 <=
@@ -139,8 +138,6 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
                 tooltipRef.current.style.boxShadow = "2px 0px 0px 0px #009bff60";
             }
         }
-        if (left !== null && ballSize) setTrack({ width: left + ballSize / 2 });
-
         if (update) updateValue();
     }, [update]);
 
@@ -177,15 +174,16 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
     const jumpTo = (e: React.MouseEvent<HTMLDivElement>) => {
         if (ballRef.current && ballSize && minLimit && maxLimit && left !== null) {
             const newPosition = ballRef.current.offsetLeft + (e.clientX - ballRef.current.getBoundingClientRect().left) - ballSize / 2;
-            const step = Math.round(newPosition / (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)));
-            const newStepPosition = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * step - ballSize / 2;
 
             if (hasSteps) {
+                const step = Math.round(newPosition / (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)));
+                const newStepPosition = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * step - ballSize / 2;
                 if (newStepPosition >= minLimit && newStepPosition <= maxLimit) setLeft(newStepPosition);
             } else {
                 if (newPosition >= minLimit && newPosition <= maxLimit) setLeft(newPosition);
             }
-            setUpdate("jumpTo");
+            if (update === "jumpTo") setUpdate("move");
+            else setUpdate("jumpTo");
         }
     };
 
@@ -233,7 +231,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
             <div
                 className="default-slider-track"
                 ref={trackRef}
-                style={track ? { left: `0`, width: `${track.width}px` } : undefined}
+                style={{ width: `${track}px` }}
                 onMouseOver={() => {
                     if (tooltipVisibility === "hover") setVisibility("hidden");
                 }}
