@@ -66,8 +66,8 @@ $ball-size: 13px;
     position: absolute;
     z-index: 1;
     padding: 10px 10px;
-    box-shadow: -2px 0px 0px 0px #009bff60;
-    transform: translateX(3%);
+    box-shadow: 2px 0px 0px 0px #009bff60;
+    transform: translateX(-100%);
     pointer-events: none;
     p {
         font-weight: normal;
@@ -118,3 +118,8 @@ $ball-size: 13px;
 }
 
 ///////////////////
+
+html,
+body {
+    background-color: #343434;
+}

@@ -129,16 +129,14 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
         if (firstRender.current) return;
         if (tooltipRef.current && containerRef.current && ballSize && left) {
             if (
-                left + tooltipRef.current.clientWidth + ballSize >
-                Number(window.getComputedStyle(containerRef.current).marginRight.replace("px", "")) + containerRef.current.clientWidth + 2
+                left - tooltipRef.current.clientWidth - ballSize / 2 <=
+                Number(window.getComputedStyle(containerRef.current).marginLeft.replace("px", "")) * -1
             ) {
-                tooltipRef.current.style.left = "0px";
-                tooltipRef.current.style.transform = "translateX(-90%)";
-                tooltipRef.current.style.boxShadow = "2px 0px 0px 0px #009bff60";
-            } else {
-                tooltipRef.current.style.left = "50%";
-                tooltipRef.current.style.transform = "translateX(3%)";
+                tooltipRef.current.style.transform = "translateX(0%)";
                 tooltipRef.current.style.boxShadow = "-2px 0px 0px 0px #009bff60";
+            } else {
+                tooltipRef.current.style.transform = "translateX(-100%)";
+                tooltipRef.current.style.boxShadow = "2px 0px 0px 0px #009bff60";
             }
         }
         if (left !== null && ballSize) setTrack({ width: left + ballSize / 2 });
