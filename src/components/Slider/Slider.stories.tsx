@@ -117,9 +117,11 @@ const someData = {
     step: 0.1,
 };
 
+document.body.style.backgroundColor = "#343434";
+
 export const Primary = () => (
     <>
-        {/* <div style={{ width: "500px" }}>
+        <div style={{ width: "500px" }}>
             <Slider
                 value={datesArray}
                 tooltipVisibility="always"
@@ -130,7 +132,7 @@ export const Primary = () => (
                 start={"03-25-2020"}
                 formatter={(x: any) => `${x.substring(0, 5)}`}
             />
-        </div> */}
+        </div>
         <div style={{ width: "400px" }}>
             <Slider
                 value={{ min: 0, max: 1, step: 0.1 }}
