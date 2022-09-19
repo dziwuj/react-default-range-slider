@@ -1,9 +1,9 @@
-$primary-color: #f3bc3e;
-$secondary-color: #8c8c8c;
+$primary-color: #009bff;
+$secondary-color: #343434;
 $highlight-color: #f5f5f5;
 
 $slider-length: auto;
-$ball-size: 25px;
+$ball-size: 13px;
 
 .default-slider-container {
     position: relative;
@@ -16,11 +16,15 @@ $ball-size: 25px;
 }
 
 .default-slider-rail {
+    border-top: 5px solid #595959;
+    border-bottom: 5px solid #595959;
     background-color: $secondary-color;
     width: $slider-length;
     height: 10px;
     border-radius: 50px;
     z-index: 0;
+    position: relative;
+    top: -5px;
 }
 
 .default-slider-track {
@@ -34,7 +38,7 @@ $ball-size: 25px;
 
 .default-slider-ball {
     background-color: $highlight-color;
-    outline: $primary-color 5px solid;
+    outline: $primary-color 2px solid;
     z-index: 2;
     width: $ball-size;
     height: $ball-size;
@@ -48,20 +52,28 @@ $ball-size: 25px;
 }
 
 .default-slider-tooltip {
-    background-color: $primary-color;
+    background-color: transparent;
     visibility: hidden;
     display: flex;
     align-items: center;
     height: 20px;
     width: auto;
+    top: 13px;
     color: #fff;
     text-align: center;
-    border-radius: 6px;
-    padding: 15px 20px;
+    padding: 10px 10px;
     flex-wrap: nowrap;
     position: absolute;
     z-index: 1;
+    padding: 10px 10px;
+    box-shadow: -2px 0px 0px 0px #009bff60;
+    transform: translateX(3%);
     pointer-events: none;
+    p {
+        font-weight: normal;
+        font-size: 14px;
+        margin-top: 15px;
+    }
 }
 
 /* Position the tooltip */
@@ -69,7 +81,6 @@ $ball-size: 25px;
 .default-slider-ball {
     .default-slider-tooltip {
         left: 50%;
-        transform: translateX(-50%);
     }
 }
 
@@ -82,25 +93,6 @@ $ball-size: 25px;
 
 .default-slider-mid {
     bottom: calc($ball-size / 2) + 25px;
-}
-
-.default-slider-over::after {
-    border-color: $primary-color transparent transparent transparent;
-    top: 100%; /* At the bottom of the tooltip */
-}
-.default-slider-under::after {
-    border-color: transparent transparent $primary-color transparent;
-    bottom: 100%; /* At the top of the tooltip */
-}
-
-.default-slider-tooltip::after {
-    content: " ";
-    position: absolute;
-    margin-left: var(--after-margin-left, -10px);
-    border-width: 10px;
-    border-style: solid;
-    pointer-events: none;
-    left: var(--after-left, 50%);
 }
 
 .default-slider-text-holder {
@@ -116,10 +108,13 @@ $ball-size: 25px;
 .default-slider-step {
     position: absolute;
     z-index: 1;
-    height: 10px;
+    height: 15px;
     width: 5px;
     border-radius: 30px;
     background-color: $highlight-color;
+    // background-color: transparent ;
+    top: -5px;
+    height: 15px;
 }
 
 ///////////////////

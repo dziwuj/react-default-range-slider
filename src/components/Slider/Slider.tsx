@@ -79,19 +79,20 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
     const [currLeft, setCurrLeft] = useState<number | null>(null);
     const [update, setUpdate] = useState<"jumpTo" | "move" | null>(null);
     const firstRender = useRef<boolean>(true);
-    const outputRef = React.useRef<Output | null>(null);
+    const outputRef = React.useRef<Output>({ value: min.value, valueIndex: min.valueIndex });
 
     function init() {
         if (ballRef.current && railRef.current) {
             setBallSize(ballRef.current.clientWidth);
-            setMinLimit(ballRef.current.clientWidth / -2);
-            setMaxLimit(Number(window.getComputedStyle(railRef.current).width.replace("px", "")) - ballRef.current.clientWidth / 2);
-            setLeft(
-                (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * startPoint - ballRef.current.clientWidth / 2
-            );
+            setMinLimit(-1);
+            setMaxLimit(Number(window.getComputedStyle(railRef.current).width.replace("px", "")) - ballRef.current.clientWidth);
+            const startLeft =
+                (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * outputRef.current.valueIndex -
+                ballRef.current.clientWidth / 2;
+            setLeft(startLeft < 0 ? 0 : startLeft);
         }
 
-        const trackWidth = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * startPoint;
+        const trackWidth = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * outputRef.current.valueIndex;
 
         if (trackRef.current)
             setTrack({
@@ -125,34 +126,18 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
 
     useEffect(() => {
         if (firstRender.current) return;
-        if (track && tooltipRef.current && containerRef.current && ballSize && left) {
+        if (tooltipRef.current && containerRef.current && ballSize && left) {
             if (
-                left - tooltipRef.current.clientWidth / 2 + ballSize / 2 <
-                Number(window.getComputedStyle(containerRef.current).marginLeft.replace("px", "")) * -1
+                left + tooltipRef.current.clientWidth + ballSize >
+                Number(window.getComputedStyle(containerRef.current).marginRight.replace("px", "")) + containerRef.current.clientWidth + 2
             ) {
-                tooltipRef.current.style.left = `${
-                    Number(window.getComputedStyle(containerRef.current).marginLeft.replace("px", "")) * -1 - left + tooltipRef.current.clientWidth / 2
-                }px`;
-                tooltipRef.current.style.setProperty("--after-left", `0`);
-                tooltipRef.current.style.setProperty("--after-margin-left", `${Math.abs(left + tooltipRef.current.clientWidth / 2 - ballSize / 1.5)}px`);
-            } else if (
-                left + tooltipRef.current.clientWidth / 2 + ballSize / 2 >
-                Number(window.getComputedStyle(containerRef.current).marginRight.replace("px", "")) + containerRef.current.clientWidth
-            ) {
-                tooltipRef.current.style.left = `${
-                    Number(window.getComputedStyle(containerRef.current).marginRight.replace("px", "")) +
-                    containerRef.current.clientWidth -
-                    (left + tooltipRef.current.clientWidth / 2)
-                }px`;
-                tooltipRef.current.style.setProperty("--after-left", `0`);
-                tooltipRef.current.style.setProperty(
-                    "--after-margin-left",
-                    `${left + tooltipRef.current.clientWidth - ballSize / 1.5 - containerRef.current.clientWidth}px`
-                );
+                tooltipRef.current.style.left = "0px";
+                tooltipRef.current.style.transform = "translateX(-90%)";
+                tooltipRef.current.style.boxShadow = "2px 0px 0px 0px #009bff60";
             } else {
                 tooltipRef.current.style.left = "50%";
-                tooltipRef.current.style.setProperty("--after-left", `50%`);
-                tooltipRef.current.style.setProperty("--after-margin-left", `-10px`);
+                tooltipRef.current.style.transform = "translateX(3%)";
+                tooltipRef.current.style.boxShadow = "-2px 0px 0px 0px #009bff60";
             }
         }
         if (left !== null && ballSize) setTrack({ width: left + ballSize / 2 });
