@@ -167,10 +167,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
             const newStepPosition = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * step - ballSize / 2;
 
             if (hasSteps) {
-                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) {
-                    console.log("moving");
-                    setLeft(newStepPosition);
-                }
+                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) setLeft(newStepPosition);
             } else {
                 if (newPosition >= minLimit && newPosition <= maxLimit) setLeft(newPosition);
             }
