@@ -28,6 +28,7 @@ const range = function (start: number | string, end: number | string, step: numb
 
     if (typeof start == "number") {
         while (step > 0 ? end >= start : end <= start) {
+            if (start.toString().includes(".") && start.toString().split(".")[1].length > 2) start = Math.round(Number(start) * 100) / 100;
             range.push(start);
             start += step;
         }
@@ -84,8 +85,8 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
     function init() {
         if (ballRef.current && railRef.current) {
             setBallSize(ballRef.current.clientWidth);
-            setMinLimit(-1);
-            setMaxLimit(Number(window.getComputedStyle(railRef.current).width.replace("px", "")) - ballRef.current.clientWidth);
+            setMinLimit(-ballRef.current.clientWidth / 2);
+            setMaxLimit(Number(window.getComputedStyle(railRef.current).width.replace("px", "")) - ballRef.current.clientWidth / 2);
             const startLeft =
                 (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * outputRef.current.valueIndex -
                 ballRef.current.clientWidth / 2;
@@ -166,7 +167,10 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
             const newStepPosition = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * step - ballSize / 2;
 
             if (hasSteps) {
-                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) setLeft(newStepPosition);
+                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) {
+                    console.log("moving");
+                    setLeft(newStepPosition);
+                }
             } else {
                 if (newPosition >= minLimit && newPosition <= maxLimit) setLeft(newPosition);
             }

@@ -112,14 +112,14 @@ for (let i = 0; i < 26; i++) {
 }
 
 const someData = {
-    min: 1,
-    max: 10,
-    step: 1,
+    min: 0,
+    max: 1,
+    step: 0.1,
 };
 
 export const Primary = () => (
     <>
-        <div style={{ width: "500px" }}>
+        {/* <div style={{ width: "500px" }}>
             <Slider
                 value={datesArray}
                 tooltipVisibility="always"
@@ -130,18 +130,16 @@ export const Primary = () => (
                 start={"03-25-2020"}
                 formatter={(x: any) => `${x.substring(0, 5)}`}
             />
-        </div>
+        </div> */}
         <div style={{ width: "400px" }}>
             <Slider
-                value={someData}
-                tooltipVisibility="always"
-                tooltipPosition="over"
+                value={{ min: 0, max: 1, step: 0.1 }}
+                start={0.7}
+                hasSteps
+                formatter={(x: any) => (Math.round(Number(x) * 100) / 100).toString()}
                 onChange={(x) => {
                     console.log("2: ", x);
                 }}
-                // hasSteps
-                // start={"03-21-2020"}
-                // formatter={(x: any) => `${x.substring(0, 5)}`}
             />
         </div>
     </>

@@ -111,10 +111,15 @@ $ball-size: 13px;
     height: 15px;
     width: 5px;
     border-radius: 30px;
-    background-color: $highlight-color;
-    // background-color: transparent ;
+    // background-color: $highlight-color;
+    background-color: transparent;
     top: -5px;
     height: 15px;
 }
 
 ///////////////////
+
+html,
+body {
+    background-color: #343434;
+}
