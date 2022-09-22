@@ -152,7 +152,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
         outputRef.current = { value: min.value, valueIndex: min.valueIndex };
         if (update === "jumpTo") {
             onChange(outputRef.current);
-            if (left !== null && ballSize) setTrack(left + ballSize / 2);
+            // if (left !== null && ballSize) setTrack(left + ballSize / 2);
             setUpdate(null);
         }
     }, [min.value]);
