@@ -123,6 +123,10 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
     }, []);
 
     useEffect(() => {
+        if (left !== null && ballSize) setTrack(left + ballSize / 2);
+    }, [left]);
+
+    useEffect(() => {
         if (firstRender.current) return;
 
         if (tooltipRef.current && containerRef.current && ballSize && left) {
@@ -162,19 +166,9 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
             const newStepPosition = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * step - ballSize / 2;
 
             if (hasSteps) {
-                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) {
-                    if (left !== null && ballSize) {
-                        setTrack(left + ballSize / 2);
-                        setLeft(newStepPosition);
-                    }
-                }
+                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) setLeft(newStepPosition);
             } else {
-                if (newPosition >= minLimit && newPosition <= maxLimit) {
-                    if (left !== null && ballSize) {
-                        setTrack(left + ballSize / 2);
-                        setLeft(newPosition);
-                    }
-                }
+                if (newPosition >= minLimit && newPosition <= maxLimit) setLeft(newPosition);
             }
             if (tooltipVisibility !== "never") setVisibility("visible");
             setUpdate("move");
@@ -188,19 +182,9 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
             if (hasSteps) {
                 const step = Math.round(newPosition / (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)));
                 const newStepPosition = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * step - ballSize / 2;
-                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) {
-                    if (left !== null && ballSize) {
-                        setTrack(left + ballSize / 2);
-                        setLeft(newStepPosition);
-                    }
-                }
+                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) setLeft(newStepPosition);
             } else {
-                if (newPosition >= minLimit && newPosition <= maxLimit) {
-                    if (left !== null && ballSize) {
-                        setTrack(left + ballSize / 2);
-                        setLeft(newPosition);
-                    }
-                }
+                if (newPosition >= minLimit && newPosition <= maxLimit) setLeft(newPosition);
             }
 
             setUpdate("jumpTo");
