@@ -123,10 +123,6 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
     }, []);
 
     useEffect(() => {
-        if (left !== null && ballSize) setTrack(left + ballSize / 2);
-    }, [left]);
-
-    useEffect(() => {
         if (firstRender.current) return;
 
         if (tooltipRef.current && containerRef.current && ballSize && left) {
@@ -166,9 +162,15 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
             const newStepPosition = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * step - ballSize / 2;
 
             if (hasSteps) {
-                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) setLeft(newStepPosition);
+                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) {
+                    setLeft(newStepPosition);
+                    setTrack(newStepPosition + ballSize / 2);
+                }
             } else {
-                if (newPosition >= minLimit && newPosition <= maxLimit) setLeft(newPosition);
+                if (newPosition >= minLimit && newPosition <= maxLimit) {
+                    setLeft(newPosition);
+                    setTrack(newPosition + ballSize / 2);
+                }
             }
             if (tooltipVisibility !== "never") setVisibility("visible");
             setUpdate("move");
@@ -182,9 +184,15 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
             if (hasSteps) {
                 const step = Math.round(newPosition / (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)));
                 const newStepPosition = (Number(window.getComputedStyle(railRef.current!).width.replace("px", "")) / (values.length - 1)) * step - ballSize / 2;
-                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) setLeft(newStepPosition);
+                if (newStepPosition >= minLimit && newStepPosition <= maxLimit) {
+                    setLeft(newStepPosition);
+                    setTrack(newStepPosition + ballSize / 2);
+                }
             } else {
-                if (newPosition >= minLimit && newPosition <= maxLimit) setLeft(newPosition);
+                if (newPosition >= minLimit && newPosition <= maxLimit) {
+                    setLeft(newPosition);
+                    setTrack(newPosition + ballSize / 2);
+                }
             }
 
             setUpdate("jumpTo");
@@ -212,7 +220,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
 
     return (
         <div className="default-slider-container" ref={containerRef}>
-            <div className="default-slider-rail" ref={railRef} onClick={jumpTo}>
+            <div className="default-slider-rail" ref={railRef} onMouseDown={jumpTo}>
                 {hasSteps &&
                     values.map((value, index) => {
                         return (
@@ -242,7 +250,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
                 onMouseOut={() => {
                     if (tooltipVisibility === "hover") setVisibility("hidden");
                 }}
-                onClick={jumpTo}
+                onMouseDown={jumpTo}
             ></div>
             <div
                 className={`default-slider-min default-slider-ball${lastMoved === ballRef.current ? " default-slider-active" : ""}`}
