@@ -3,10 +3,6 @@ import { SliderProps, Output } from "./Slider.types";
 
 import "./Slider.scss";
 
-// const range = (start: number, end: number, step: number) => {
-//     return Array.from(Array.from(Array(Math.ceil((end - start) / step)).keys()), (x) => start + x * step);
-// };
-
 const range = function (start: number | string, end: number | string, step: number) {
     let range = [];
 
@@ -57,7 +53,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
     const format = formatter ? formatter : (x: string | number) => `${x}`;
 
     const [min, setMin] = useState<Output>({
-        value: format(values[startPoint]),
+        value: values[startPoint].toString(),
         valueIndex: startPoint,
     });
 
@@ -102,6 +98,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
         outputRef.current && onChange(outputRef.current);
         setStartX(null);
         setMoving(false);
+        document.documentElement.style.overflow = "visible";
         if (tooltipVisibility === "hover") setVisibility("hidden");
     }
 
@@ -109,15 +106,24 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
         init();
     }
 
+    const mousemove = (e: MouseEvent) => {
+        setCurrentMousePosition(e.clientX);
+    };
+
+    const touchmove = (e: TouchEvent) => {
+        setCurrentMousePosition(e.touches[0].clientX);
+    };
+
     useEffect(() => {
-        document.addEventListener("mousemove", (e) => {
-            setCurrentMousePosition(e.clientX);
-        });
+        document.addEventListener("mousemove", mousemove);
+        document.addEventListener("touchmove", touchmove);
         window.addEventListener("resize", updateSize);
 
         init();
         setUpdate(null);
         return () => {
+            document.removeEventListener("mousemove", mousemove);
+            document.removeEventListener("touchmove", touchmove);
             window.removeEventListener("resize", updateSize);
         };
     }, []);
@@ -148,7 +154,6 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
         outputRef.current = { value: min.value, valueIndex: min.valueIndex };
         if (update === "jumpTo") {
             onChange(outputRef.current);
-            // if (left !== null && ballSize) setTrack(left + ballSize / 2);
             setUpdate(null);
         }
     }, [min.value]);
@@ -220,7 +225,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
 
     return (
         <div className="default-slider-container" ref={containerRef}>
-            <div className="default-slider-rail" ref={railRef} onMouseDown={jumpTo}>
+            <div className="default-slider-rail" ref={railRef} onPointerDown={jumpTo}>
                 {hasSteps &&
                     values.map((value, index) => {
                         return (
@@ -250,7 +255,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
                 onMouseOut={() => {
                     if (tooltipVisibility === "hover") setVisibility("hidden");
                 }}
-                onMouseDown={jumpTo}
+                onPointerDown={jumpTo}
             ></div>
             <div
                 className={`default-slider-min default-slider-ball${lastMoved === ballRef.current ? " default-slider-active" : ""}`}
@@ -262,12 +267,14 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
                 onMouseOut={() => {
                     if (tooltipVisibility === "hover") setVisibility("hidden");
                 }}
-                onMouseDown={(e) => {
-                    setStartX(currentMousePosition);
+                onPointerDown={(e) => {
+                    setStartX(e.clientX);
                     setLastMoved(ballRef.current);
                     setCurrLeft(left);
                     setMoving(true);
-                    document.addEventListener("mouseup", cancel, { once: true });
+                    document.documentElement.style.overflow = "hidden";
+                    if (e.pointerType === "touch") document.addEventListener("touchend", cancel, { once: true });
+                    else document.addEventListener("pointerup", cancel, { once: true });
                 }}
             >
                 <div
@@ -275,7 +282,7 @@ const Slider: React.FC<SliderProps> = ({ hasSteps, tooltipVisibility, tooltipPos
                     style={{ visibility: visibility }}
                     ref={tooltipRef}
                 >
-                    <p className="default-slider-min-text-holder default-slider-text-holder">{min.value}</p>
+                    <p className="default-slider-min-text-holder default-slider-text-holder" dangerouslySetInnerHTML={{ __html: format(min.value) }}></p>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 {
   "name": "react-default-slider",
-  "version": "2.3.4",
+  "version": "3.0.0",
   "description": "Slider component for React 18",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
